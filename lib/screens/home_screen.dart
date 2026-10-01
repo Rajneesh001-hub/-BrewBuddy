@@ -11,6 +11,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
 import '../providers/menu_provider.dart';
 import '../providers/user_provider.dart';
@@ -20,6 +21,7 @@ import '../widgets/birthday_banner.dart';
 import '../widgets/drink_card.dart';
 import '../widgets/happy_hour_banner.dart';
 import 'cart_screen.dart';
+import 'login_screen.dart';
 import 'menu_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -30,8 +32,13 @@ class HomeScreen extends StatelessWidget {
     final userProvider = context.watch<UserProvider>();
     final menuProvider = context.watch<MenuProvider>();
     final cartProvider = context.watch<CartProvider>();
+    final authProvider = context.watch<AuthProvider>();
     final user = userProvider.user;
     final seasonal = menuProvider.seasonalDrinksForHome;
+
+    // Guest uses 'Guest' as display name; logged-in user uses first name
+    final displayName =
+        authProvider.isGuest ? 'Guest' : user.name.split(' ').first;
 
     // Greeting based on time of day
     final hour = DateTime.now().hour;
@@ -112,7 +119,7 @@ class HomeScreen extends StatelessWidget {
                 backgroundColor: AppColors.freshGreen,
                 radius: 16,
                 child: Text(
-                  user.name[0].toUpperCase(),
+                  displayName[0].toUpperCase(),
                   style: AppTextStyles.labelMedium.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
@@ -149,7 +156,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            user.name.split(' ').first,
+                            displayName,
                             style: AppTextStyles.h3.copyWith(
                               color: AppColors.deepGreen,
                             ),
@@ -163,61 +170,129 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(width: 12),
-                      // Right: Stars container
-                      Container(
+                      // Right: Stars container (hidden for guests)
+                      if (!authProvider.isGuest)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.goldLight,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: AppColors.caramelGold.withValues(alpha: 0.4),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.star_rounded,
+                                    color: AppColors.caramelGold,
+                                    size: 16,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '${user.stars} Stars',
+                                    style: AppTextStyles.starBalance,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.caramelGold,
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: Text(
+                                  'GOLD TIER',
+                                  style: AppTextStyles.labelSmall.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 9,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        const SizedBox.shrink(),
+                    ],
+                  ),
+
+                  // ────── GUEST PROMPT BANNER ────────────────────────────
+                  if (authProvider.isGuest) ...[
+                    const SizedBox(height: 12),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const LoginScreen(),
+                          ),
+                          (route) => false,
+                        );
+                      },
+                      child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
+                          horizontal: 14,
+                          vertical: 10,
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.goldLight,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: AppColors.caramelGold.withValues(alpha: 0.4),
+                            color: AppColors.caramelGold.withValues(alpha: 0.5),
                           ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        child: Row(
                           children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(
-                                  Icons.star_rounded,
-                                  color: AppColors.caramelGold,
-                                  size: 16,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '${user.stars} Stars',
-                                  style: AppTextStyles.starBalance,
-                                ),
-                              ],
+                            const Icon(
+                              Icons.star_rounded,
+                              color: AppColors.caramelGold,
+                              size: 18,
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Log in to earn Stars',
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: AppColors.caramelGold,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
+                                horizontal: 12,
+                                vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.caramelGold,
+                                color: AppColors.freshGreen,
                                 borderRadius: BorderRadius.circular(100),
                               ),
                               child: Text(
-                                'GOLD TIER',
-                                style: AppTextStyles.labelSmall.copyWith(
+                                'Sign In',
+                                style: AppTextStyles.labelMedium.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w700,
-                                  fontSize: 9,
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
 
                   const SizedBox(height: 16),
 

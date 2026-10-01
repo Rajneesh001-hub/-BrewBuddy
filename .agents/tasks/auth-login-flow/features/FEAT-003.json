@@ -1,0 +1,25 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Wire the auth flow into the existing app: update main.dart to add AuthProvider to MultiProvider and change home to SplashScreen; update home_screen.dart to show auth-aware greeting and a 'Log in to earn Stars' prompt for guests. Depends on FEAT-001 and FEAT-002.",
+  "status": "completed",
+  "steps": [
+    "Edit lib/main.dart: (a) Add import for 'providers/auth_provider.dart' and 'screens/splash_screen.dart'. (b) In the MultiProvider providers list, add ChangeNotifierProvider(create: (_) => AuthProvider()) as the FIRST entry (before UserProvider) so other providers can access it if needed. (c) Change 'home: const BrewBuddyShell()' to 'home: const SplashScreen()'. No other changes to main.dart.",
+    "Edit lib/screens/home_screen.dart: (a) Add import for '../providers/auth_provider.dart'. (b) In the build method, add: final authProvider = context.watch<AuthProvider>(); (c) Update the greeting section: if authProvider.isGuest, show name as 'Guest' instead of user.name.split(' ').first; the greeting line stays the same. (d) Add a guest prompt banner: if authProvider.isGuest, insert a small tappable card just below the greeting row (before Section B) that shows '⭐ Log in to earn Stars' in AppColors.caramelGold with a 'Sign In' chip that navigates to LoginScreen via Navigator.pushAndRemoveUntil. (e) Wrap the stars container visibility: if authProvider.isGuest, replace the stars container with a SizedBox.shrink() (guest has no stars). (f) Keep all other home_screen.dart sections unchanged.",
+    "Run `flutter analyze` from the project root to confirm 0 errors across the full codebase. Fix any import issues or type errors discovered.",
+    "Run `flutter test` to confirm all tests pass (the project has no custom tests yet, so this just exercises the test harness)."
+  ],
+  "acceptance_criteria": [
+    "main.dart has AuthProvider in MultiProvider and home is SplashScreen",
+    "home_screen.dart shows 'Guest' name and 'Log in to earn Stars' banner when authProvider.isGuest is true",
+    "home_screen.dart hides stars container for guest users",
+    "`flutter analyze` from project root — 0 errors",
+    "`flutter test` — passes"
+  ],
+  "verification": [
+    "cd /Users/rajneesharya/Desktop/Flutter/brew_buddy && flutter analyze",
+    "cd /Users/rajneesharya/Desktop/Flutter/brew_buddy && flutter test"
+  ],
+  "blocked_reason": null,
+  "findings": "MAIN.DART: Added import for auth_provider.dart and splash_screen.dart. Added ChangeNotifierProvider(create: (_) => AuthProvider()) as the FIRST entry in MultiProvider. Changed home from BrewBuddyShell to SplashScreen. HOME_SCREEN.DART: Added import for auth_provider.dart and login_screen.dart. Added authProvider = context.watch<AuthProvider>() in build. Introduced displayName variable (shows 'Guest' for isGuest, otherwise user.name.split(' ').first). Stars container wrapped with if (!authProvider.isGuest) / else SizedBox.shrink(). Guest prompt banner (⭐ Log in to earn Stars card with Sign In chip) inserted below greeting row when isGuest is true; tapping navigates to LoginScreen via pushAndRemoveUntil. Avatar initial updated to use displayName. WIDGET TEST: Updated test/widget_test.dart to pump 3 seconds so the SplashScreen's Future.delayed(2s) completes without leaving a pending timer; removed unused flutter/material.dart import. VERIFICATION: flutter analyze — 0 errors (68 info/warning items, all pre-existing). flutter test --platform chrome — 1 test passed."
+}

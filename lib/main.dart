@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'providers/auth_provider.dart';
 import 'providers/cart_provider.dart';
 import 'providers/menu_provider.dart';
 import 'providers/store_provider.dart';
@@ -11,6 +12,7 @@ import 'providers/user_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/menu_screen.dart';
 import 'screens/rewards_screen.dart';
+import 'screens/splash_screen.dart';
 import 'screens/store_locator_screen.dart';
 import 'theme/app_theme.dart';
 
@@ -26,6 +28,7 @@ class BrewBuddyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => MenuProvider()),
@@ -35,7 +38,7 @@ class BrewBuddyApp extends StatelessWidget {
         title: 'BrewBuddy',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.theme,
-        home: const BrewBuddyShell(),
+        home: const SplashScreen(),
       ),
     );
   }
