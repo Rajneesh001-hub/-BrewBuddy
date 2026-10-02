@@ -40,7 +40,7 @@ class BirthdayBanner extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
               borderRadius:
                   BorderRadius.circular(AppDimensions.cornerRadius),
             ),
@@ -66,7 +66,7 @@ class BirthdayBanner extends StatelessWidget {
                 Text(
                   reward.description,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
                 const SizedBox(height: 4),

@@ -7,7 +7,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../providers/menu_provider.dart';
 import '../providers/store_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/store_tile.dart';
@@ -22,54 +21,6 @@ class StoreLocatorScreen extends StatefulWidget {
 
 class _StoreLocatorScreenState extends State<StoreLocatorScreen> {
   GoogleMapController? _mapController;
-
-  // Default camera position — centered on India
-  static const CameraPosition _indiaCenter = CameraPosition(
-    target: LatLng(20.5937, 78.9629),
-    zoom: 5.0,
-  );
-
-  Set<Marker> _buildMarkers(StoreProvider storeProvider) {
-    final markers = <Marker>{};
-
-    for (final store in storeProvider.stores) {
-      final isSelected = storeProvider.selectedStore?.id == store.id;
-      markers.add(
-        Marker(
-          markerId: MarkerId(store.id),
-          position: LatLng(store.latitude, store.longitude),
-          infoWindow: InfoWindow(
-            title: store.name,
-            snippet: store.hours,
-          ),
-          icon: isSelected
-              ? BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueGreen)
-              : BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueRose),
-          onTap: () => storeProvider.selectStore(store),
-        ),
-      );
-    }
-
-    // User location marker
-    if (storeProvider.hasLocation) {
-      markers.add(
-        Marker(
-          markerId: const MarkerId('user_location'),
-          position: LatLng(
-            storeProvider.userPosition!.latitude,
-            storeProvider.userPosition!.longitude,
-          ),
-          infoWindow: const InfoWindow(title: 'You are here'),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-              BitmapDescriptor.hueBlue),
-        ),
-      );
-    }
-
-    return markers;
-  }
 
   void _moveToStore(StoreProvider storeProvider) {
     final store = storeProvider.selectedStore;
@@ -89,7 +40,7 @@ class _StoreLocatorScreenState extends State<StoreLocatorScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.map_rounded,
+          const Icon(Icons.map_rounded,
               size: 48, color: AppColors.mediumGrey),
           const SizedBox(height: 12),
           Text(
@@ -186,7 +137,7 @@ class _StoreLocatorScreenState extends State<StoreLocatorScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 8),
-                  color: AppColors.errorRed.withOpacity(0.1),
+                  color: AppColors.errorRed.withValues(alpha: 0.1),
                   child: Row(
                     children: [
                       const Icon(Icons.warning_amber_rounded,

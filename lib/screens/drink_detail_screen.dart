@@ -196,7 +196,7 @@ class _DrinkDetailScreenState extends State<DrinkDetailScreen>
                       // Tab 2: Origin
                       drink.origin != null
                           ? _OriginTab(origin: drink.origin!)
-                          : _NoDataTab(
+                          : const _NoDataTab(
                               message:
                                   'Origin details not available for this drink.'),
                       // Tab 3: Brewing
@@ -412,7 +412,7 @@ class _OriginTab extends StatelessWidget {
                     Text(
                       origin.country,
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
@@ -433,7 +433,7 @@ class _OriginTab extends StatelessWidget {
               borderRadius:
                   BorderRadius.circular(AppDimensions.cornerRadius),
               border: Border.all(
-                  color: AppColors.caramelGold.withOpacity(0.3)),
+                  color: AppColors.caramelGold.withValues(alpha: 0.3)),
             ),
             child: Row(
               children: [
@@ -542,11 +542,11 @@ class _BrewingTab extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.freshGreen.withOpacity(0.1),
+              color: AppColors.freshGreen.withValues(alpha: 0.1),
               borderRadius:
                   BorderRadius.circular(AppDimensions.cornerRadius),
               border: Border.all(
-                  color: AppColors.freshGreen.withOpacity(0.3)),
+                  color: AppColors.freshGreen.withValues(alpha: 0.3)),
             ),
             child: Row(
               children: [

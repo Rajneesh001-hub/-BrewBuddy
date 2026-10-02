@@ -35,7 +35,7 @@ class TimeSlotChip extends StatelessWidget {
     } else {
       bgColor = AppColors.white;
       textColor = AppColors.deepGreen;
-      borderColor = AppColors.deepGreen.withOpacity(0.3);
+      borderColor = AppColors.deepGreen.withValues(alpha: 0.3);
     }
 
     return GestureDetector(

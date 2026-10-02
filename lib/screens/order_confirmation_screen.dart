@@ -40,7 +40,7 @@ class OrderConfirmationScreen extends StatelessWidget {
                       color: AppColors.freshGreen,
                       shape: BoxShape.circle,
                       border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           width: 3),
                     ),
                     child: const Icon(
@@ -58,7 +58,7 @@ class OrderConfirmationScreen extends StatelessWidget {
                   Text(
                     'We\'re preparing your order',
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                     ),
                   ),
                 ],
@@ -114,7 +114,7 @@ class OrderConfirmationScreen extends StatelessWidget {
                 borderRadius:
                     BorderRadius.circular(AppDimensions.cornerRadius),
                 border: Border.all(
-                    color: AppColors.caramelGold.withOpacity(0.4)),
+                    color: AppColors.caramelGold.withValues(alpha: 0.4)),
               ),
               child: Row(
                 children: [

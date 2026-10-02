@@ -82,7 +82,7 @@ class StarProgressBar extends StatelessWidget {
               Container(
                 height: 8,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.25),
+                  color: Colors.white.withValues(alpha: 0.25),
                   borderRadius:
                       BorderRadius.circular(AppDimensions.cornerRadiusPill),
                 ),
@@ -110,14 +110,14 @@ class StarProgressBar extends StatelessWidget {
             Text(
               '🏆 You\'ve reached Gold status!',
               style: AppTextStyles.bodySmall.copyWith(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
               ),
             )
           else
             Text(
               '$starsToNext more stars to reach Gold',
               style: AppTextStyles.bodySmall.copyWith(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
               ),
             ),
         ],

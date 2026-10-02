@@ -1,0 +1,7 @@
+{
+  "task_id": "task-auth-login-flow",
+  "task_description": "Build a complete 3-screen mock authentication login flow for BrewBuddy: Welcome/Login, OTP Verification, and Complete Profile. Mocked auth (no Firebase), shared_preferences for session persistence, AuthProvider (Provider), and 6 reusable auth widgets. Wire SplashScreen → LoginScreen or BrewBuddyShell on app start.",
+  "status": "pending",
+  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003"],
+  "blocked_reason": null
+}

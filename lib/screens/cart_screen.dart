@@ -217,7 +217,7 @@ class _CartItemCard extends StatelessWidget {
               padding: const EdgeInsets.only(left: 8),
               child: Icon(
                 Icons.delete_outline,
-                color: AppColors.errorRed.withOpacity(0.7),
+                color: AppColors.errorRed.withValues(alpha: 0.7),
                 size: 20,
               ),
             ),
@@ -290,11 +290,11 @@ class _HappyHourDiscountBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.freshGreen.withOpacity(0.12),
+        color: AppColors.freshGreen.withValues(alpha: 0.12),
         borderRadius:
             BorderRadius.circular(AppDimensions.cornerRadius),
         border: Border.all(
-            color: AppColors.freshGreen.withOpacity(0.3)),
+            color: AppColors.freshGreen.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -462,7 +462,7 @@ class _PlaceOrderBar extends StatelessWidget {
         color: AppColors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 16,
             offset: const Offset(0, -4),
           ),

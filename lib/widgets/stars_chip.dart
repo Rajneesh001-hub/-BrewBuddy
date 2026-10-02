@@ -20,14 +20,14 @@ class StarsChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: light
-            ? Colors.white.withOpacity(0.15)
-            : AppColors.deepGreen.withOpacity(0.08),
+            ? Colors.white.withValues(alpha: 0.15)
+            : AppColors.deepGreen.withValues(alpha: 0.08),
         borderRadius:
             BorderRadius.circular(AppDimensions.cornerRadiusPill),
         border: Border.all(
           color: light
-              ? Colors.white.withOpacity(0.3)
-              : AppColors.caramelGold.withOpacity(0.4),
+              ? Colors.white.withValues(alpha: 0.3)
+              : AppColors.caramelGold.withValues(alpha: 0.4),
         ),
       ),
       child: Row(

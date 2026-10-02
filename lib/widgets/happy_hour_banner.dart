@@ -94,7 +94,7 @@ class _HappyHourBannerState extends State<HappyHourBanner> {
               Text(
                 '4 PM – 7 PM',
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                 ),
               ),
             ],
@@ -117,7 +117,7 @@ class _HappyHourBannerState extends State<HappyHourBanner> {
                     Text(
                       '15% off all beverages',
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                   ],
@@ -130,7 +130,7 @@ class _HappyHourBannerState extends State<HappyHourBanner> {
                   Text(
                     _isActive ? 'Ends in' : 'Starts in',
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                     ),
                   ),
                   Text(
@@ -147,7 +147,7 @@ class _HappyHourBannerState extends State<HappyHourBanner> {
           Text(
             'Eligible drinks:',
             style: AppTextStyles.bodySmall
-                .copyWith(color: Colors.white.withOpacity(0.8)),
+                .copyWith(color: Colors.white.withValues(alpha: 0.8)),
           ),
           const SizedBox(height: 6),
           Wrap(
@@ -160,11 +160,11 @@ class _HappyHourBannerState extends State<HappyHourBanner> {
               padding: const EdgeInsets.symmetric(
                   horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(
                     AppDimensions.cornerRadiusPill),
                 border: Border.all(
-                    color: Colors.white.withOpacity(0.4)),
+                    color: Colors.white.withValues(alpha: 0.4)),
               ),
               child: Text(
                 drink,

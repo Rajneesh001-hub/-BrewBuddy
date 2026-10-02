@@ -208,7 +208,7 @@ class _TierMilestoneRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _MilestoneBubble(
+        const _MilestoneBubble(
           label: 'Green',
           stars: 5,
           icon: Icons.eco,
@@ -314,11 +314,11 @@ class _TierBenefitsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppDimensions.cornerRadius),
         border: Border.all(
           color:
-              isGold ? AppColors.caramelGold.withOpacity(0.5) : AppColors.lightGrey,
+              isGold ? AppColors.caramelGold.withValues(alpha: 0.5) : AppColors.lightGrey,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -396,7 +396,7 @@ class _HowStarsWork extends StatelessWidget {
         color: AppColors.deepGreenLight,
         borderRadius: BorderRadius.circular(AppDimensions.cornerRadius),
         border: Border.all(
-            color: AppColors.deepGreen.withOpacity(0.15)),
+            color: AppColors.deepGreen.withValues(alpha: 0.15)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -409,19 +409,19 @@ class _HowStarsWork extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          _HowRow(
+          const _HowRow(
               emoji: '🛍️',
               text: 'Earn 1 Star for every ₹50 spent'),
-          _HowRow(
+          const _HowRow(
               emoji: '🌿',
               text: 'Reach 5 Stars to unlock Green tier'),
-          _HowRow(
+          const _HowRow(
               emoji: '🏆',
               text: 'Reach 30 Stars to unlock Gold tier'),
-          _HowRow(
+          const _HowRow(
               emoji: '🎁',
               text: 'Redeem Stars for free drinks & upgrades'),
-          _HowRow(
+          const _HowRow(
               emoji: '🎂',
               text: 'Get a free birthday drink every year'),
         ],

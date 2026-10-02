@@ -1,0 +1,26 @@
+{
+  "project_type": "Flutter mobile app (Android/iOS/Web), Dart 3.13, Flutter 3.47",
+  "language": "Dart",
+  "build_system": "Flutter standard; pubspec.yaml at repo root brew_buddy/. Assets declared under flutter.assets: ['assets/images/', 'assets/icons/']. No codegen steps.",
+  "test_framework": "flutter_test (standard); no existing test files beyond what flutter creates. Run with: flutter test",
+  "build_command": "flutter build apk --debug (or just flutter analyze to check)",
+  "test_command": "flutter analyze && flutter test",
+  "verification_instructions": "1. Run `flutter analyze` from /Users/rajneesharya/Desktop/Flutter/brew_buddy — must produce 0 errors (warnings acceptable). 2. Run `flutter test` — must pass. 3. Run `flutter run -d chrome` (or connected device) and manually verify: splash shows logo for ~2s, routes to login; mock OTP 123456 works; complete profile saves; home shows user name.",
+  "snapshot_or_generated_files": null,
+  "environment_constraints": "Flutter 3.47 / Dart 3.13. The app targets Android/iOS/Web. Web target (chrome) is used for development runs. Do NOT add Firebase or any backend deps. shared_preferences: ^2.2.3 must be added to pubspec.yaml.",
+  "contribution_requirements": "No hardcoded colors — use AppColors, AppTextStyles, AppDimensions, AppDecorations from lib/theme/app_theme.dart. All controllers and timers must be disposed. Code must pass flutter analyze with 0 errors.",
+  "key_patterns": "1. Providers: ChangeNotifier subclasses in lib/providers/, registered in MultiProvider in main.dart. Pattern: class FooProvider extends ChangeNotifier with private state, getters, action methods. 2. Models: plain Dart classes in lib/models/, const-constructors, copyWith methods. 3. Screens: StatelessWidget or StatefulWidget in lib/screens/, consume providers via context.watch/context.read. 4. Widgets: reusable StatelessWidget/StatefulWidget in lib/widgets/. Auth widgets go in lib/widgets/auth/. 5. Data/mocks: lib/data/ folder for mock data. 6. Theme: AppColors (Color constants), AppTextStyles (static TextStyle getters), AppDimensions (spacing constants), AppDecorations (BoxDecoration helpers). 7. Timer pattern: see HappyHourBanner — Timer.periodic, dispose in dispose(). 8. Navigation: MaterialApp routes, Navigator.pushReplacement for auth flow transitions. 9. Existing UserModel has name, email, phone, stars, tier, birthday. AuthProvider wraps a separate auth concept (phone, isLoggedIn, isGuest, isNewUser) and should update UserProvider after login.",
+  "relevant_files": [
+    "lib/main.dart",
+    "lib/theme/app_theme.dart",
+    "lib/screens/home_screen.dart",
+    "lib/providers/user_provider.dart",
+    "lib/models/user_model.dart",
+    "lib/models/reward_model.dart",
+    "lib/data/mock_rewards.dart",
+    "lib/widgets/happy_hour_banner.dart",
+    "lib/widgets/drink_card.dart",
+    "pubspec.yaml"
+  ],
+  "directory_structure": "brew_buddy/lib/ — main.dart (app entry, MultiProvider, BrewBuddyShell bottom nav), theme/app_theme.dart (AppColors/AppTextStyles/AppDimensions/AppDecorations), screens/ (home_screen.dart, menu_screen.dart, cart_screen.dart, rewards_screen.dart, store_locator_screen.dart, drink_detail_screen.dart, customization_screen.dart, order_confirmation_screen.dart), providers/ (user_provider.dart, cart_provider.dart, menu_provider.dart, store_provider.dart), models/ (user_model.dart, reward_model.dart, drink_model.dart, cart_item_model.dart, customization_model.dart, order_model.dart, store_model.dart), widgets/ (drink_card.dart, birthday_banner.dart, happy_hour_banner.dart, stars_chip.dart, star_progress_bar.dart, reward_tile.dart, section_header.dart, cart_badge.dart, store_tile.dart, customization_row.dart, time_slot_chip.dart), data/ (mock_rewards.dart, mock_drinks.dart, mock_stores.dart), assets/images/ (logo.png, google_stich.png), assets/icons/ (empty)"
+}

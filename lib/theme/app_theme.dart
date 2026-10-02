@@ -41,13 +41,13 @@ class AppColors {
   static const Color successGreenLight = Color(0xFFE8F5E9);
 
   /// Deep green with opacity — used for tinted containers
-  static Color deepGreenLight = const Color(0xFF1E3932).withOpacity(0.08);
+  static Color deepGreenLight = const Color(0xFF1E3932).withValues(alpha: 0.08);
 
   /// Gold tint background for birthday/gold tier banners
   static const Color goldLight = Color(0xFFFFF8EC);
 
   /// Shadow color
-  static Color shadowColor = Colors.black.withOpacity(0.08);
+  static Color shadowColor = Colors.black.withValues(alpha: 0.08);
 }
 
 // ─── Text Styles ──────────────────────────────────────────────────────────────
@@ -235,7 +235,7 @@ class AppDecorations {
         borderRadius: BorderRadius.circular(AppDimensions.cornerRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.07),
+            color: Colors.black.withValues(alpha: 0.07),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -285,7 +285,6 @@ class AppTheme {
           primary: AppColors.freshGreen,
           secondary: AppColors.caramelGold,
           surface: AppColors.cream,
-          background: AppColors.cream,
           error: AppColors.errorRed,
           onPrimary: AppColors.white,
           onSecondary: AppColors.deepGreen,

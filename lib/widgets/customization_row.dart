@@ -150,7 +150,7 @@ class CustomizationOptionRow extends StatelessWidget {
                         subtitles![opt]!,
                         style: AppTextStyles.labelSmall.copyWith(
                           color: isSelected
-                              ? Colors.white.withOpacity(0.8)
+                              ? Colors.white.withValues(alpha: 0.8)
                               : AppColors.mediumGrey,
                           fontSize: 10,
                         ),
