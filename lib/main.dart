@@ -11,6 +11,7 @@ import 'providers/store_provider.dart';
 import 'providers/user_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/menu_screen.dart';
+import 'screens/profile_screen.dart';
 import 'screens/rewards_screen.dart';
 import 'screens/splash_screen.dart';
 import 'screens/store_locator_screen.dart';
@@ -62,6 +63,7 @@ class _BrewBuddyShellState extends State<BrewBuddyShell> {
     MenuScreen(),
     RewardsScreen(),
     StoreLocatorScreen(),
+    ProfileScreen(),
   ];
 
   @override
@@ -136,6 +138,13 @@ class _BrewBuddyNavBar extends StatelessWidget {
                 label: 'Stores',
                 isActive: currentIndex == 3,
                 onTap: () => onTap(3),
+              ),
+              _NavItem(
+                icon: Icons.person_outline_rounded,
+                activeIcon: Icons.person_rounded,
+                label: 'Profile',
+                isActive: currentIndex == 4,
+                onTap: () => onTap(4),
               ),
             ],
           ),

@@ -2,6 +2,7 @@
 // Manages user profile, star balance, loyalty tier, and reward redemptions.
 
 import 'package:flutter/foundation.dart';
+import '../models/auth_models.dart';
 import '../models/user_model.dart';
 import '../models/reward_model.dart';
 import '../data/mock_rewards.dart';
@@ -33,6 +34,28 @@ class UserProvider extends ChangeNotifier {
 
   /// Progress 0.0–1.0 toward next tier
   double get tierProgress => _user.tierProgress();
+
+  // ── Sync from AuthUser (called after login / profile save) ────────────────
+
+  /// Updates the UserModel from the authenticated AuthUser so that
+  /// profile data entered during sign-up is reflected everywhere.
+  void updateFromAuth(AuthUser authUser) {
+    final newStars = authUser.stars > 0 ? authUser.stars : _user.stars;
+    final newTier = UserModel.tierFromStars(newStars);
+
+    _user = UserModel(
+      id: _user.id,
+      name: authUser.name.isNotEmpty ? authUser.name : _user.name,
+      email: authUser.email.isNotEmpty ? authUser.email : _user.email,
+      phone: authUser.phone.isNotEmpty ? authUser.phone : _user.phone,
+      stars: newStars,
+      tier: newTier,
+      birthday: authUser.dateOfBirth ?? _user.birthday,
+      birthdayReward: _user.birthdayReward,
+      memberSince: _user.memberSince,
+    );
+    notifyListeners();
+  }
 
   // ── Actions ────────────────────────────────────────────────────────────────
 

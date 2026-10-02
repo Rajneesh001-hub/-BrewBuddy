@@ -93,6 +93,12 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
 
     if (!mounted) return;
 
+    // Sync UserProvider with the saved auth profile
+    final savedUser = authProvider.currentUser;
+    if (savedUser != null) {
+      userProvider.updateFromAuth(savedUser);
+    }
+
     // Award welcome stars
     userProvider.addStars(20);
 

@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../main.dart';
 import '../providers/auth_provider.dart';
+import '../providers/user_provider.dart';
 import '../theme/app_theme.dart';
 import 'login_screen.dart';
 
@@ -29,6 +30,14 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return;
 
     final authProvider = context.read<AuthProvider>();
+    await authProvider.checkSession();
+    if (!mounted) return;
+
+    // Sync real user data into UserProvider on session restore
+    if (authProvider.currentUser != null) {
+      context.read<UserProvider>().updateFromAuth(authProvider.currentUser!);
+    }
+
     if (authProvider.isLoggedIn || authProvider.isGuest) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const BrewBuddyShell()),
