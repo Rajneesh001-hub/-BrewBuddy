@@ -1,9 +1,10 @@
 // ─── Store Locator Screen ─────────────────────────────────────────────────────
-// Google Map with store markers + user location, scrollable store list,
+// OpenStreetMap with store markers + user location, scrollable store list,
 // Directions (url_launcher → Google Maps) and Order Here button.
 
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,45 +21,28 @@ class StoreLocatorScreen extends StatefulWidget {
 }
 
 class _StoreLocatorScreenState extends State<StoreLocatorScreen> {
-  GoogleMapController? _mapController;
+  late MapController _mapController;
+
+  @override
+  void initState() {
+    super.initState();
+    _mapController = MapController();
+  }
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
 
   void _moveToStore(StoreProvider storeProvider) {
     final store = storeProvider.selectedStore;
-    if (store != null && _mapController != null) {
-      _mapController!.animateCamera(
-        CameraUpdate.newLatLngZoom(
-          LatLng(store.latitude, store.longitude),
-          14.0,
-        ),
+    if (store != null) {
+      _mapController.move(
+        LatLng(store.latitude, store.longitude),
+        14.0,
       );
     }
-  }
-
-  Widget _buildMapPlaceholder() {
-    return Container(
-      color: AppColors.lightGrey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.map_rounded,
-              size: 48, color: AppColors.mediumGrey),
-          const SizedBox(height: 12),
-          Text(
-            'Map View',
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.mediumGrey,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Browse stores in the list below',
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.mediumGrey,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   Future<void> _openDirections(
@@ -82,6 +66,70 @@ class _StoreLocatorScreenState extends State<StoreLocatorScreen> {
       builder: (context, storeProvider, _) {
         final stores = storeProvider.sortedStores;
 
+        // Build markers for all stores
+        final storeMarkers = stores
+            .map(
+              (store) => Marker(
+                point: LatLng(store.latitude, store.longitude),
+                width: 40,
+                height: 40,
+                child: GestureDetector(
+                  onTap: () => storeProvider.selectStore(store),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: storeProvider.selectedStore?.id == store.id
+                          ? AppColors.freshGreen
+                          : AppColors.caramelGold,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2,
+                      ),
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.location_on,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+            .toList();
+
+        // User location marker
+        if (storeProvider.hasLocation) {
+          storeMarkers.add(
+            Marker(
+              point: LatLng(
+                storeProvider.userPosition!.latitude,
+                storeProvider.userPosition!.longitude,
+              ),
+              width: 40,
+              height: 40,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.blue,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.my_location,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
         return Scaffold(
           backgroundColor: AppColors.cream,
           appBar: AppBar(
@@ -93,15 +141,13 @@ class _StoreLocatorScreenState extends State<StoreLocatorScreen> {
               IconButton(
                 onPressed: () async {
                   await storeProvider.fetchUserLocation();
-                  if (storeProvider.hasLocation && _mapController != null) {
-                    _mapController!.animateCamera(
-                      CameraUpdate.newLatLngZoom(
-                        LatLng(
-                          storeProvider.userPosition!.latitude,
-                          storeProvider.userPosition!.longitude,
-                        ),
-                        12.0,
+                  if (storeProvider.hasLocation) {
+                    _mapController.move(
+                      LatLng(
+                        storeProvider.userPosition!.latitude,
+                        storeProvider.userPosition!.longitude,
                       ),
+                      12.0,
                     );
                   }
                 },
@@ -125,10 +171,29 @@ class _StoreLocatorScreenState extends State<StoreLocatorScreen> {
           ),
           body: Column(
             children: [
-              // ── Google Map ─────────────────────────────────────────────
+              // ── OpenStreetMap ──────────────────────────────────────────
               SizedBox(
                 height: 280,
-                child: _buildMapPlaceholder(),
+                child: FlutterMap(
+                  mapController: _mapController,
+                  options: MapOptions(
+                    initialCenter:
+                        const LatLng(20.5937, 78.9629), // India center
+                    initialZoom: 5.0,
+                  ),
+                  children: [
+                    // OpenStreetMap tiles
+                    TileLayer(
+                      urlTemplate:
+                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      userAgentPackageName: 'com.brewbuddy.app',
+                    ),
+                    // Markers layer
+                    MarkerLayer(
+                      markers: storeMarkers,
+                    ),
+                  ],
+                ),
               ),
 
               // ── Error message ──────────────────────────────────────────
