@@ -321,89 +321,106 @@ class HomeScreen extends StatelessWidget {
                   // ────── SECTION C: Your Usual Order Card ────────────────
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: AppColors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.07),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
+                          color: AppColors.deepGreen.withValues(alpha: 0.12),
+                          blurRadius: 16,
+                          offset: const Offset(0, 6),
                         ),
                       ],
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 48,
-                          height: 48,
-                          decoration: const BoxDecoration(
-                            color: AppColors.deepGreen,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Center(
-                            child: Text(
-                              '☕',
-                              style: TextStyle(fontSize: 22),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'YOUR USUAL',
-                                style: AppTextStyles.labelSmall.copyWith(
-                                  color: AppColors.mediumGrey,
-                                  letterSpacing: 1.2,
-                                  fontWeight: FontWeight.w600,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // Left: text content
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.deepGreen
+                                            .withValues(alpha: 0.08),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: Text(
+                                        'YOUR USUAL',
+                                        style:
+                                            AppTextStyles.labelSmall.copyWith(
+                                          color: AppColors.deepGreen,
+                                          letterSpacing: 1.1,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 9,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Double Shot\nOat Cortado',
+                                      style: AppTextStyles.h5.copyWith(
+                                        color: AppColors.deepGreen,
+                                        height: 1.3,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 14, vertical: 8),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.freshGreen,
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              'Reorder',
+                                              style: AppTextStyles.labelMedium
+                                                  .copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 4),
+                                            const Icon(
+                                              Icons.arrow_forward_rounded,
+                                              size: 13,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                'Double Shot Oat Cortado',
-                                style: AppTextStyles.h5.copyWith(
-                                  color: AppColors.deepGreen,
-                                ),
+                            ),
+                            // Right: coffee image
+                            SizedBox(
+                              width: 130,
+                              child: Image.asset(
+                                'assets/images/coffee_hero.jpg',
+                                fit: BoxFit.cover,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.freshGreen,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  'Reorder',
-                                  style: AppTextStyles.labelMedium.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                const Icon(
-                                  Icons.arrow_forward,
-                                  size: 14,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
 

@@ -6,6 +6,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../models/order_model.dart';
 import '../theme/app_theme.dart';
+import 'track_order_screen.dart';
 
 class OrderConfirmationScreen extends StatelessWidget {
   final OrderModel order;
@@ -265,10 +266,34 @@ class OrderConfirmationScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
+            // ── Track Order button ───────────────────────────────────────
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => TrackOrderScreen(order: order),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.delivery_dining_rounded, size: 20),
+              label: const Text('Track My Order'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 52),
+                backgroundColor: AppColors.freshGreen,
+                foregroundColor: AppColors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      AppDimensions.cornerRadiusPill),
+                ),
+                elevation: 0,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
             // ── Done button ──────────────────────────────────────────────
             ElevatedButton.icon(
               onPressed: () {
-                // Pop all screens back to root
                 Navigator.of(context)
                     .popUntil((route) => route.isFirst);
               },
@@ -276,10 +301,14 @@ class OrderConfirmationScreen extends StatelessWidget {
               label: const Text('Back to Home'),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 52),
+                backgroundColor: AppColors.white,
+                foregroundColor: AppColors.deepGreen,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(
                       AppDimensions.cornerRadiusPill),
+                  side: const BorderSide(color: AppColors.lightGrey),
                 ),
+                elevation: 0,
               ),
             ),
 

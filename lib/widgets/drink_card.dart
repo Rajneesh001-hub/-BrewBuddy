@@ -219,29 +219,52 @@ class DrinkCard extends StatelessWidget {
     );
   }
 
-  // Compact carousel card (emoji-based, kept for home carousel)
+  // Compact carousel card — real image + add button
   Widget _buildCompact() {
+    // Map drink categories to relevant Unsplash coffee images
+    final categoryImages = {
+      DrinkCategory.hotCoffee: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&q=80',
+      DrinkCategory.coldCoffee: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&q=80',
+      DrinkCategory.frappuccino: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=300&q=80',
+      DrinkCategory.tea: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&q=80',
+      DrinkCategory.seasonal: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&q=80',
+    };
+    final imgUrl = categoryImages[drink.category] ??
+        'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&q=80';
+
     return SizedBox(
       width: 160,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Image area
           Stack(
             children: [
-              Container(
-                height: 120,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: AppColors.cream,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(AppDimensions.cornerRadius),
-                    topRight: Radius.circular(AppDimensions.cornerRadius),
-                  ),
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(AppDimensions.cornerRadius),
+                  topRight: Radius.circular(AppDimensions.cornerRadius),
                 ),
-                child: Center(
-                  child: Text(
-                    drink.imageUrl,
-                    style: const TextStyle(fontSize: 56),
+                child: CachedNetworkImage(
+                  imageUrl: imgUrl,
+                  height: 120,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    height: 120,
+                    color: AppColors.cream,
+                    child: Center(
+                      child: Text(drink.imageUrl,
+                          style: const TextStyle(fontSize: 48)),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    height: 120,
+                    color: AppColors.cream,
+                    child: Center(
+                      child: Text(drink.imageUrl,
+                          style: const TextStyle(fontSize: 48)),
+                    ),
                   ),
                 ),
               ),
@@ -269,6 +292,7 @@ class DrinkCard extends StatelessWidget {
                 ),
             ],
           ),
+          // Info + add button
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
             child: Column(
@@ -280,10 +304,32 @@ class DrinkCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  '₹${drink.basePrice.toStringAsFixed(0)}',
-                  style: AppTextStyles.priceSmall,
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '₹${drink.basePrice.toStringAsFixed(0)}',
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.freshGreen,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: onAdd,
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: const BoxDecoration(
+                          color: AppColors.freshGreen,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.add,
+                            color: AppColors.white, size: 16),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
