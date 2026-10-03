@@ -12,6 +12,12 @@ class MenuProvider extends ChangeNotifier {
   String _searchQuery = '';
   DrinkModel? _selectedDrink;
   CustomizationModel _currentCustomization = const CustomizationModel();
+  
+  // Cache for filtered results
+  late List<DrinkModel> _cachedFilteredDrinks = [];
+  late List<DrinkModel> _cachedSearchResults = [];
+  String _cachedSearchQuery = '';
+  DrinkCategory _cachedCategory = DrinkCategory.hotCoffee;
 
   // ── Getters ────────────────────────────────────────────────────────────────
 
@@ -26,8 +32,13 @@ class MenuProvider extends ChangeNotifier {
   /// All drinks (no filter)
   List<DrinkModel> get allDrinks => mock_drinks.mockDrinks;
 
-  /// Drinks filtered by selected category and search query
+  /// Drinks filtered by selected category and search query - cached
   List<DrinkModel> get filteredDrinks {
+    // Return cached result if nothing changed
+    if (_cachedCategory == _selectedCategory && _cachedSearchQuery == _searchQuery && _cachedFilteredDrinks.isNotEmpty) {
+      return _cachedFilteredDrinks;
+    }
+    
     var drinks = mock_drinks.drinksByCategory(_selectedCategory);
     if (_searchQuery.isNotEmpty) {
       final q = _searchQuery.toLowerCase();
@@ -37,18 +48,35 @@ class MenuProvider extends ChangeNotifier {
               d.description.toLowerCase().contains(q))
           .toList();
     }
+    
+    _cachedFilteredDrinks = drinks;
+    _cachedCategory = _selectedCategory;
+    _cachedSearchQuery = _searchQuery;
     return drinks;
   }
 
-  /// Search across ALL categories
+  /// Search across ALL categories - cached
   List<DrinkModel> get searchResults {
-    if (_searchQuery.isEmpty) return [];
+    if (_searchQuery.isEmpty) {
+      _cachedSearchResults = [];
+      return [];
+    }
+    
+    // Return cached if search query unchanged
+    if (_cachedSearchQuery == _searchQuery && _cachedSearchResults.isNotEmpty) {
+      return _cachedSearchResults;
+    }
+    
     final q = _searchQuery.toLowerCase();
-    return mock_drinks.mockDrinks
+    final results = mock_drinks.mockDrinks
         .where((d) =>
             d.name.toLowerCase().contains(q) ||
             d.description.toLowerCase().contains(q))
         .toList();
+    
+    _cachedSearchResults = results;
+    _cachedSearchQuery = _searchQuery;
+    return results;
   }
 
   /// Whether a search is active

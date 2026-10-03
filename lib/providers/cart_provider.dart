@@ -2,6 +2,8 @@
 // Manages cart state, happy-hour discounts, order placement, and pickup times.
 
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import '../models/cart_item_model.dart';
 import '../models/customization_model.dart';
 import '../models/drink_model.dart';
@@ -12,6 +14,13 @@ class CartProvider extends ChangeNotifier {
   final List<CartItemModel> _items = [];
   String _selectedPickupTime = '';
   OrderModel? _lastOrder;
+  final List<OrderModel> _orderHistory = [];
+  late List<OrderModel> _cachedRecentOrders = [];
+  
+  CartProvider() {
+    // Load order history asynchronously without blocking initialization
+    Future.microtask(() => _loadOrderHistory());
+  }
 
   // ── Getters ────────────────────────────────────────────────────────────────
 
@@ -22,6 +31,19 @@ class CartProvider extends ChangeNotifier {
   String get selectedPickupTime => _selectedPickupTime;
 
   OrderModel? get lastOrder => _lastOrder;
+  
+  List<OrderModel> get orderHistory => List.unmodifiable(_orderHistory);
+  
+  /// Recent orders (last 5) in reverse chronological order - cached for performance
+  List<OrderModel> get recentOrders {
+    // Only recalculate if orderHistory changed
+    if (_cachedRecentOrders.isEmpty && _orderHistory.isNotEmpty) {
+      final sorted = List<OrderModel>.from(_orderHistory)
+        ..sort((a, b) => b.placedAt.compareTo(a.placedAt));
+      _cachedRecentOrders = sorted.take(5).toList();
+    }
+    return _cachedRecentOrders;
+  }
 
   /// Subtotal before any discounts
   double get subtotal => _items.fold(0.0, (sum, i) => sum + i.lineTotal);
@@ -140,8 +162,10 @@ class CartProvider extends ChangeNotifier {
     );
 
     _lastOrder = order;
+    _orderHistory.add(order);
     _items.clear();
     _selectedPickupTime = '';
+    _saveOrderHistory();
     notifyListeners();
     return order;
   }
@@ -151,5 +175,70 @@ class CartProvider extends ChangeNotifier {
     _items.clear();
     _selectedPickupTime = '';
     notifyListeners();
+  }
+
+  // ── Persistence ────────────────────────────────────────────────────────────
+
+  /// Load order history from shared_preferences
+  Future<void> _loadOrderHistory() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final orderHistoryJson = prefs.getStringList('order_history') ?? [];
+      
+      _orderHistory.clear();
+      for (final json in orderHistoryJson) {
+        final data = jsonDecode(json) as Map<String, dynamic>;
+        _orderHistory.add(_orderModelFromJson(data));
+      }
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error loading order history: $e');
+    }
+  }
+
+  /// Save order history to shared_preferences
+  Future<void> _saveOrderHistory() async {
+    try {
+      _cachedRecentOrders.clear(); // Invalidate cache
+      final prefs = await SharedPreferences.getInstance();
+      final orderHistoryJson = _orderHistory
+          .map((order) => jsonEncode(_orderModelToJson(order)))
+          .toList();
+      await prefs.setStringList('order_history', orderHistoryJson);
+    } catch (e) {
+      debugPrint('Error saving order history: $e');
+    }
+  }
+
+  /// Convert OrderModel to JSON for storage
+  Map<String, dynamic> _orderModelToJson(OrderModel order) {
+    return {
+      'orderId': order.orderId,
+      'subtotal': order.subtotal,
+      'discount': order.discount,
+      'total': order.total,
+      'starsEarned': order.starsEarned,
+      'pickupTime': order.pickupTime,
+      'storeName': order.storeName,
+      'placedAt': order.placedAt.toIso8601String(),
+      'itemCount': order.items.length,
+      // Store just the names of items, not full cart items
+      'itemNames': order.items.map((i) => i.drink.name).toList(),
+    };
+  }
+
+  /// Convert JSON back to OrderModel for loading
+  OrderModel _orderModelFromJson(Map<String, dynamic> json) {
+    return OrderModel(
+      orderId: json['orderId'] as String,
+      items: [], // Items are simplified for storage
+      subtotal: (json['subtotal'] as num).toDouble(),
+      discount: (json['discount'] as num).toDouble(),
+      total: (json['total'] as num).toDouble(),
+      starsEarned: json['starsEarned'] as int,
+      pickupTime: json['pickupTime'] as String,
+      storeName: json['storeName'] as String,
+      placedAt: DateTime.parse(json['placedAt'] as String),
+    );
   }
 }

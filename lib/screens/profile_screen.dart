@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../models/auth_models.dart';
 import '../providers/auth_provider.dart';
+import '../providers/cart_provider.dart';
 import '../providers/user_provider.dart';
 import '../theme/app_theme.dart';
 import 'login_screen.dart';
@@ -29,6 +30,189 @@ class ProfileScreen extends StatelessWidget {
   Color _tierColor(int stars) {
     if (stars >= 30) return AppColors.caramelGold;
     return AppColors.freshGreen;
+  }
+
+  void _showAllOrders(BuildContext context, List<dynamic> orders) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        builder: (context, scrollController) => Container(
+          decoration: const BoxDecoration(
+            color: AppColors.cream,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              // Header
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'All Orders (${orders.length})',
+                      style: AppTextStyles.h4.copyWith(
+                        color: AppColors.deepGreen,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(
+                        Icons.close_rounded,
+                        color: AppColors.mediumGrey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(color: AppColors.lightGrey),
+              // Orders list
+              Expanded(
+                child: ListView.builder(
+                  controller: scrollController,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) {
+                    final order = orders[index];
+                    final formattedDate =
+                        '${order.placedAt.day.toString().padLeft(2, '0')}/'
+                        '${order.placedAt.month.toString().padLeft(2, '0')}/'
+                        '${order.placedAt.year}';
+                    final formattedTime =
+                        '${order.placedAt.hour.toString().padLeft(2, '0')}:'
+                        '${order.placedAt.minute.toString().padLeft(2, '0')}';
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(
+                            AppDimensions.cornerRadius,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 12,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(14),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Order #${order.orderId}',
+                                    style:
+                                        AppTextStyles.labelMedium.copyWith(
+                                      color: AppColors.deepGreen,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.freshGreen
+                                          .withValues(alpha: 0.15),
+                                      borderRadius:
+                                          BorderRadius.circular(100),
+                                    ),
+                                    child: Text(
+                                      'Ready',
+                                      style: AppTextStyles.labelSmall
+                                          .copyWith(
+                                        color: AppColors.freshGreen,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '$formattedDate at $formattedTime',
+                                    style:
+                                        AppTextStyles.bodySmall.copyWith(
+                                      color: AppColors.mediumGrey,
+                                    ),
+                                  ),
+                                  Text(
+                                    '₹${order.total.toStringAsFixed(2)}',
+                                    style:
+                                        AppTextStyles.labelMedium.copyWith(
+                                      color: AppColors.deepGreen,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${order.items.length} item${order.items.length > 1 ? 's' : ''}',
+                                    style:
+                                        AppTextStyles.bodySmall.copyWith(
+                                      color: AppColors.mediumGrey,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.star_rounded,
+                                        size: 16,
+                                        color: AppColors.caramelGold,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '${order.starsEarned}',
+                                        style: AppTextStyles.bodySmall
+                                            .copyWith(
+                                          color: AppColors.caramelGold,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _confirmLogout(BuildContext context) async {
@@ -334,7 +518,244 @@ class ProfileScreen extends StatelessWidget {
 
                   const SizedBox(height: 32),
 
-                  // ── Logout Button ────────────────────────────────────────
+                  // ── Order History ──────────────────────────────────────
+                  Text(
+                    'ORDER HISTORY',
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: AppColors.mediumGrey,
+                      letterSpacing: 1.4,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Consumer<CartProvider>(
+                    builder: (context, cartProvider, _) {
+                      if (cartProvider.orderHistory.isEmpty) {
+                        return Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 24,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(
+                              AppDimensions.cornerRadius,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 12,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                const Text(
+                                  '📦',
+                                  style: TextStyle(fontSize: 32),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'No orders yet',
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    color: AppColors.mediumGrey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+
+                      // Sort orders by most recent first
+                      final sortedOrders = List<dynamic>.from(cartProvider.orderHistory)
+                        ..sort((a, b) => b.placedAt.compareTo(a.placedAt));
+                      
+                      // Show only first 2 orders in the main section
+                      final displayedOrders = sortedOrders.take(2).toList();
+                      final hasMoreOrders = sortedOrders.length > 2;
+
+                      return Column(
+                        children: [
+                          ...displayedOrders.map((order) {
+                            final formattedDate =
+                                '${order.placedAt.day.toString().padLeft(2, '0')}/'
+                                '${order.placedAt.month.toString().padLeft(2, '0')}/'
+                                '${order.placedAt.year}';
+                            final formattedTime =
+                                '${order.placedAt.hour.toString().padLeft(2, '0')}:'
+                                '${order.placedAt.minute.toString().padLeft(2, '0')}';
+
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(
+                                    AppDimensions.cornerRadius,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.05),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(14),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Order #${order.orderId}',
+                                            style:
+                                                AppTextStyles.labelMedium.copyWith(
+                                              color: AppColors.deepGreen,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 2,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.freshGreen
+                                                  .withValues(alpha: 0.15),
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                            ),
+                                            child: Text(
+                                              'Ready',
+                                              style: AppTextStyles.labelSmall
+                                                  .copyWith(
+                                                color: AppColors.freshGreen,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '$formattedDate at $formattedTime',
+                                            style:
+                                                AppTextStyles.bodySmall.copyWith(
+                                              color: AppColors.mediumGrey,
+                                            ),
+                                          ),
+                                          Text(
+                                            '₹${order.total.toStringAsFixed(2)}',
+                                            style:
+                                                AppTextStyles.labelMedium.copyWith(
+                                              color: AppColors.deepGreen,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '${order.items.length} item${order.items.length > 1 ? 's' : ''}',
+                                            style:
+                                                AppTextStyles.bodySmall.copyWith(
+                                              color: AppColors.mediumGrey,
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.star_rounded,
+                                                size: 16,
+                                                color: AppColors.caramelGold,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                '${order.starsEarned}',
+                                                style: AppTextStyles.bodySmall
+                                                    .copyWith(
+                                                  color: AppColors.caramelGold,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                          
+                          // See All button if there are more than 2 orders
+                          if (hasMoreOrders) ...[
+                            const SizedBox(height: 12),
+                            GestureDetector(
+                              onTap: () {
+                                _showAllOrders(context, sortedOrders);
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.freshGreen.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(
+                                    AppDimensions.cornerRadius,
+                                  ),
+                                  border: Border.all(
+                                    color: AppColors.freshGreen.withValues(alpha: 0.3),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'See All Orders (${sortedOrders.length})',
+                                      style: AppTextStyles.labelMedium.copyWith(
+                                        color: AppColors.freshGreen,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    const Icon(
+                                      Icons.arrow_forward_rounded,
+                                      color: AppColors.freshGreen,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // ── Logout Button ──────────────────────────────────────
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(

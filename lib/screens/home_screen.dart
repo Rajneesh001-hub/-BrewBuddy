@@ -3,7 +3,6 @@
 // - Coffee shop branding with location selector in AppBar
 // - Greeting + Stars row with Gold tier badge
 // - Birthday reward banner
-// - Your Usual Order card with reorder button
 // - Happy Hour special timer
 // - Seasonal Specials carousel
 // - Bean of the Day info card
@@ -16,6 +15,9 @@ import '../providers/cart_provider.dart';
 import '../providers/menu_provider.dart';
 import '../providers/user_provider.dart';
 import '../models/customization_model.dart';
+import '../models/drink_model.dart';
+import '../models/order_model.dart';
+import '../models/reward_model.dart';
 import '../theme/app_theme.dart';
 import '../widgets/birthday_banner.dart';
 import '../widgets/drink_card.dart';
@@ -29,16 +31,17 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = context.watch<UserProvider>();
-    final menuProvider = context.watch<MenuProvider>();
-    final cartProvider = context.watch<CartProvider>();
-    final authProvider = context.watch<AuthProvider>();
-    final user = userProvider.user;
-    final seasonal = menuProvider.seasonalDrinksForHome;
-
-    // Guest uses 'Guest' as display name; logged-in user uses first name
-    final displayName =
-        authProvider.isGuest ? 'Guest' : user.name.split(' ').first;
+    // Use selector for specific values instead of watching entire providers
+    final displayName = context.select<AuthProvider, String>((auth) =>
+        auth.isGuest ? 'Guest' : auth.currentUser?.name.split(' ').first ?? 'Guest');
+    final isGuest = context.select<AuthProvider, bool>((auth) => auth.isGuest);
+    final userStars = context.select<UserProvider, int>((user) => user.stars);
+    final hasBirthdayReward = context.select<UserProvider, bool>((user) => user.hasBirthdayReward);
+    final birthdayReward = context.select<UserProvider, BirthdayReward>((user) => user.birthdayReward);
+    final seasonal = context.select<MenuProvider, List<DrinkModel>>((menu) => menu.seasonalDrinksForHome);
+    final lastOrder = context.select<CartProvider, OrderModel?>((cart) => cart.lastOrder);
+    final cartProvider = context.read<CartProvider>();
+    final menuProvider = context.read<MenuProvider>();
 
     // Greeting based on time of day
     final hour = DateTime.now().hour;
@@ -171,7 +174,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       // Right: Stars container (hidden for guests)
-                      if (!authProvider.isGuest)
+                      if (!isGuest)
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
@@ -197,7 +200,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    '${user.stars} Stars',
+                                    '$userStars Stars',
                                     style: AppTextStyles.starBalance,
                                   ),
                                 ],
@@ -230,7 +233,7 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                   // ────── GUEST PROMPT BANNER ────────────────────────────
-                  if (authProvider.isGuest) ...[
+                  if (isGuest) ...[
                     const SizedBox(height: 12),
                     GestureDetector(
                       onTap: () {
@@ -297,9 +300,9 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   // ────── SECTION B: Birthday Banner ──────────────────────
-                  if (userProvider.hasBirthdayReward) ...[
+                  if (hasBirthdayReward) ...[
                     BirthdayBanner(
-                      reward: user.birthdayReward,
+                      reward: birthdayReward,
                       onRedeem: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -317,114 +320,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                   ],
-
-                  // ────── SECTION C: Your Usual Order Card ────────────────
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.deepGreen.withValues(alpha: 0.12),
-                          blurRadius: 16,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: IntrinsicHeight(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            // Left: text content
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 3),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.deepGreen
-                                            .withValues(alpha: 0.08),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                      ),
-                                      child: Text(
-                                        'YOUR USUAL',
-                                        style:
-                                            AppTextStyles.labelSmall.copyWith(
-                                          color: AppColors.deepGreen,
-                                          letterSpacing: 1.1,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 9,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'Double Shot\nOat Cortado',
-                                      style: AppTextStyles.h5.copyWith(
-                                        color: AppColors.deepGreen,
-                                        height: 1.3,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    GestureDetector(
-                                      onTap: () {},
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 14, vertical: 8),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.freshGreen,
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              'Reorder',
-                                              style: AppTextStyles.labelMedium
-                                                  .copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                            const Icon(
-                                              Icons.arrow_forward_rounded,
-                                              size: 13,
-                                              color: Colors.white,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            // Right: coffee image
-                            SizedBox(
-                              width: 130,
-                              child: Image.asset(
-                                'assets/images/coffee_hero.jpg',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
 
                   // ────── SECTION D: Happy Hour Special Card ──────────────
                   const HappyHourBanner(),
@@ -533,7 +428,120 @@ class HomeScreen extends StatelessWidget {
 
                   const SizedBox(height: 24),
 
-                  // ────── SECTION F: Bean of the Day ──────────────────────
+                  // ────── SECTION F: Current Order ────────────────────────
+                  if (lastOrder != null) ...[
+                    Text(
+                      'Current Order',
+                      style: AppTextStyles.sectionTitle,
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: AppColors.mediumGrey.withValues(alpha: 0.2),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.deepGreen.withValues(alpha: 0.08),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          // Left: Order info
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Order #${lastOrder.orderId}',
+                                      style: AppTextStyles.labelMedium.copyWith(
+                                        color: AppColors.deepGreen,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.freshGreen
+                                            .withValues(alpha: 0.15),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: Text(
+                                        'Ready',
+                                        style:
+                                            AppTextStyles.labelSmall.copyWith(
+                                          color: AppColors.freshGreen,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  'Pickup: ${lastOrder.pickupTime}',
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    color: AppColors.mediumGrey,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  '₹${lastOrder.total.toStringAsFixed(2)} • ${lastOrder.items.length} item${lastOrder.items.length > 1 ? 's' : ''}',
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    color: AppColors.mediumGrey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          // Right: Action button
+                          Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.freshGreen,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: Text(
+                                    'Details',
+                                    style: AppTextStyles.labelSmall.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+
+                  // ────── SECTION G: Bean of the Day ──────────────────────
                   Text(
                     'BEAN OF THE DAY',
                     style: AppTextStyles.labelSmall.copyWith(
