@@ -9,9 +9,13 @@
 ## 📸 App Screenshots
 
 ### 🔐 Authentication Flow
+![Auth Login Screen](docs/screenshots/01-screen.png)
+
 **Sign In Screen** — Mobile number verification with OTP, Google & Apple auth options for seamless onboarding.
 
 ### 🏠 Home Screen  
+![Home Screen](docs/screenshots/02-screen.png)
+
 **Personalized Experience** — Greeting, Star balance (40 Stars, Gold Tier), Birthday rewards, Happy Hour countdown (15% off, 4–7 PM), Seasonal drinks carousel, Bestseller recommendations.
 
 ### ☕ Menu Screen
@@ -23,7 +27,6 @@
 ### 👤 Profile Screen
 **User Profile** — Account details (Rajneesh Kumar), Star & tier status (40 Stars, Gold Tier), Loyalty benefits, Order history, Preferences (Birthday, WhatsApp Updates).
 
----
 
 ## 📱 Features
 
