@@ -28,23 +28,9 @@ class _MenuScreenState extends State<MenuScreen> {
   static const Map<DrinkCategory, String> _categoryTitles = {
     DrinkCategory.hotCoffee: 'Hot Classics & Handcrafted Espresso',
     DrinkCategory.coldCoffee: 'Chilled to Perfection',
-    DrinkCategory.frappuccino: 'Blended Indulgence',
+    DrinkCategory.cappuccino: 'Blended Indulgence',
     DrinkCategory.tea: 'Tea & Herbal Blends',
     DrinkCategory.seasonal: 'Limited Time Specials',
-  };
-
-  // Image URLs by category
-  static const Map<DrinkCategory, String> _categoryImageUrls = {
-    DrinkCategory.hotCoffee:
-        'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80',
-    DrinkCategory.coldCoffee:
-        'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=80',
-    DrinkCategory.frappuccino:
-        'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80',
-    DrinkCategory.tea:
-        'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80',
-    DrinkCategory.seasonal:
-        'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80',
   };
 
   @override
@@ -57,14 +43,6 @@ class _MenuScreenState extends State<MenuScreen> {
   double _getRatingForDrink(String drinkId) {
     final hash = drinkId.hashCode % 50;
     return 4.5 + (hash / 100);
-  }
-
-  String _getImageUrlForCategory(DrinkCategory category) {
-    return _categoryImageUrls[category] ?? '';
-  }
-
-  String _getTitleForCategory(DrinkCategory category) {
-    return _categoryTitles[category] ?? '';
   }
 
   @override
@@ -126,7 +104,6 @@ class _MenuScreenState extends State<MenuScreen> {
                         final drink = drinks[index];
                         return DrinkCard(
                           drink: drink,
-                          imageUrl: _getImageUrlForCategory(drink.category),
                           rating: _getRatingForDrink(drink.id),
                           onTap: () {
                             menuProvider.selectDrink(drink);
@@ -280,7 +257,7 @@ class _MenuScreenState extends State<MenuScreen> {
     final categories = [
       DrinkCategory.hotCoffee,
       DrinkCategory.coldCoffee,
-      DrinkCategory.frappuccino,
+      DrinkCategory.cappuccino,
       DrinkCategory.tea,
     ];
 
@@ -355,7 +332,7 @@ class _MenuScreenState extends State<MenuScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _getTitleForCategory(category),
+                  _categoryTitles[category] ?? 'Beverages',
                   style: AppTextStyles.sectionTitle.copyWith(fontSize: 16),
                 ),
                 const SizedBox(height: 4),

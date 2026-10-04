@@ -5,7 +5,7 @@
 enum DrinkCategory {
   hotCoffee,
   coldCoffee,
-  frappuccino,
+  cappuccino,
   tea,
   seasonal,
 }
@@ -17,8 +17,8 @@ extension DrinkCategoryExtension on DrinkCategory {
         return 'Hot Coffee';
       case DrinkCategory.coldCoffee:
         return 'Cold Coffee';
-      case DrinkCategory.frappuccino:
-        return 'Frappuccino';
+      case DrinkCategory.cappuccino:
+        return 'Cappuccino';
       case DrinkCategory.tea:
         return 'Tea';
       case DrinkCategory.seasonal:

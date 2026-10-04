@@ -1,8 +1,7 @@
 // ─── Drink Card Widget ────────────────────────────────────────────────────────
-// Redesigned full grid card with real coffee images, rating badge,
-// and modern layout. Used in Menu grid and Home carousel.
+// Grid card with coffee.png images, rating badge, and modern layout.
+// Uses local coffee.png asset for fast rendering without network requests.
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../models/drink_model.dart';
 import '../theme/app_theme.dart';
@@ -66,37 +65,12 @@ class DrinkCard extends StatelessWidget {
                   topLeft: Radius.circular(AppDimensions.cornerRadius),
                   topRight: Radius.circular(AppDimensions.cornerRadius),
                 ),
-                child: imageUrl.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: imageUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(
-                          color: AppColors.cream,
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation(
-                                AppColors.freshGreen,
-                              ),
-                            ),
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => Container(
-                          color: AppColors.cream,
-                          child: const Center(
-                            child: Text('☕', style: TextStyle(fontSize: 48)),
-                          ),
-                        ),
-                      )
-                    : Container(
-                        color: AppColors.cream,
-                        child: Center(
-                          child: Text(
-                            drink.imageUrl,
-                            style: const TextStyle(fontSize: 64),
-                          ),
-                        ),
-                      ),
+                child: Image.asset(
+                  'assets/images/coffee.png',
+                  width: double.infinity,
+                  height: 160,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
 
@@ -219,19 +193,8 @@ class DrinkCard extends StatelessWidget {
     );
   }
 
-  // Compact carousel card — real image + add button
+  // Compact carousel card — coffee image + add button
   Widget _buildCompact() {
-    // Map drink categories to relevant Unsplash coffee images
-    final categoryImages = {
-      DrinkCategory.hotCoffee: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&q=80',
-      DrinkCategory.coldCoffee: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&q=80',
-      DrinkCategory.frappuccino: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=300&q=80',
-      DrinkCategory.tea: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&q=80',
-      DrinkCategory.seasonal: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&q=80',
-    };
-    final imgUrl = categoryImages[drink.category] ??
-        'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&q=80';
-
     return SizedBox(
       width: 160,
       child: Column(
@@ -245,27 +208,11 @@ class DrinkCard extends StatelessWidget {
                   topLeft: Radius.circular(AppDimensions.cornerRadius),
                   topRight: Radius.circular(AppDimensions.cornerRadius),
                 ),
-                child: CachedNetworkImage(
-                  imageUrl: imgUrl,
+                child: Image.asset(
+                  'assets/images/coffee.png',
+                  width: 160,
                   height: 120,
-                  width: double.infinity,
                   fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    height: 120,
-                    color: AppColors.cream,
-                    child: Center(
-                      child: Text(drink.imageUrl,
-                          style: const TextStyle(fontSize: 48)),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    height: 120,
-                    color: AppColors.cream,
-                    child: Center(
-                      child: Text(drink.imageUrl,
-                          style: const TextStyle(fontSize: 48)),
-                    ),
-                  ),
                 ),
               ),
               if (drink.isLimitedTime)

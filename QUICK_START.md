@@ -41,7 +41,7 @@ Once the app starts, open your browser and go to:
 - ✅ Bean of the day
 
 ### Menu Screen
-- ✅ Browse by category (Hot Coffee, Cold Coffee, Frappuccino, Tea)
+- ✅ Browse by category (Hot Coffee, Cold Coffee, Cappuccino, Tea)
 - ✅ Search for drinks
 - ✅ Large drink cards with images & ratings
 - ✅ Add to cart

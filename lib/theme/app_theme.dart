@@ -10,17 +10,17 @@ import 'package:google_fonts/google_fonts.dart';
 class AppColors {
   AppColors._();
 
-  /// Deep forest green — app bars, headings, nav bar active
-  static const Color deepGreen = Color(0xFF1E3932);
+  /// Rich coffee brown — app bars, headings, nav bar active
+  static const Color deepGreen = Color(0xFF6F4E37);
 
-  /// Fresh green — primary buttons, CTAs, highlights
-  static const Color freshGreen = Color(0xFF00704A);
+  /// Medium warm brown — primary buttons, CTAs, highlights
+  static const Color freshGreen = Color(0xFF8B6F47);
 
   /// Warm cream — page backgrounds
-  static const Color cream = Color(0xFFF2F0EB);
+  static const Color cream = Color(0xFFFAF6F1);
 
-  /// Caramel gold — stars, Gold tier badge, price highlights
-  static const Color caramelGold = Color(0xFFC8A36B);
+  /// Warm tan — stars, tier badge, price highlights
+  static const Color caramelGold = Color(0xFFD4A574);
 
   /// Pure white — cards, sheets
   static const Color white = Color(0xFFFFFFFF);
@@ -40,10 +40,10 @@ class AppColors {
   /// Success green (lighter shade for backgrounds)
   static const Color successGreenLight = Color(0xFFE8F5E9);
 
-  /// Deep green with opacity — used for tinted containers
-  static Color deepGreenLight = const Color(0xFF1E3932).withValues(alpha: 0.08);
+  /// Deep brown with opacity — used for tinted containers
+  static Color deepGreenLight = const Color(0xFF6F4E37).withValues(alpha: 0.08);
 
-  /// Gold tint background for birthday/gold tier banners
+  /// Gold tint background for birthday/tier banners
   static const Color goldLight = Color(0xFFFFF8EC);
 
   /// Shadow color
@@ -242,33 +242,33 @@ class AppDecorations {
         ],
       );
 
-  /// Deep green gradient for banners
+  /// Deep brown gradient for banners
   static BoxDecoration get deepGreenGradient => BoxDecoration(
         borderRadius: BorderRadius.circular(AppDimensions.cornerRadius),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF1E3932), Color(0xFF2D5247)],
+          colors: [Color(0xFF6F4E37), Color(0xFF8B6F47)],
         ),
       );
 
-  /// Happy hour green gradient
+  /// Happy hour brown gradient
   static BoxDecoration get happyHourGradient => BoxDecoration(
         borderRadius: BorderRadius.circular(AppDimensions.cornerRadius),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF00704A), Color(0xFF1E3932)],
+          colors: [Color(0xFF8B6F47), Color(0xFF6F4E37)],
         ),
       );
 
-  /// Gold gradient for Gold tier banner
+  /// Warm tan gradient for tier banner
   static BoxDecoration get goldGradient => BoxDecoration(
         borderRadius: BorderRadius.circular(AppDimensions.cornerRadius),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFC8A36B), Color(0xFFE8C080)],
+          colors: [Color(0xFFD4A574), Color(0xFFE8C080)],
         ),
       );
 }

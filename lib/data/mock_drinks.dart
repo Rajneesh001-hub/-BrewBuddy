@@ -232,15 +232,15 @@ final List<DrinkModel> mockDrinks = [
     availableTemperatures: ['Iced'],
   ),
 
-  // ── FRAPPUCCINO ─────────────────────────────────────────────────────────────
+  // ── CAPPUCCINO ─────────────────────────────────────────────────────────────
 
   DrinkModel(
     id: 'fr_001',
-    name: 'Caramel Frappuccino',
+    name: 'Caramel Cappuccino',
     description:
         'Coffee blended with milk and ice, layered with caramel sauce.',
     basePrice: 445,
-    category: DrinkCategory.frappuccino,
+    category: DrinkCategory.cappuccino,
     imageUrl: '🧋',
     isBestseller: true,
     nutrition: const NutritionInfo(
@@ -253,7 +253,7 @@ final List<DrinkModel> mockDrinks = [
     brewing: const BrewingInfo(
       method: 'Blended',
       description:
-          'A Frappuccino is blended at high speed to create a thick, '
+          'A Cappuccino is blended at high speed to create a thick, '
           'smooth, icy beverage. Coffee, milk, ice, and flavored syrups '
           'are combined and topped with whipped cream.',
       brewTime: '60 sec blend',
@@ -264,10 +264,10 @@ final List<DrinkModel> mockDrinks = [
 
   DrinkModel(
     id: 'fr_002',
-    name: 'Mocha Frappuccino',
+    name: 'Mocha Cappuccino',
     description: 'Coffee, mocha sauce, milk, and ice — topped with whip.',
     basePrice: 445,
-    category: DrinkCategory.frappuccino,
+    category: DrinkCategory.cappuccino,
     imageUrl: '🧋',
     nutrition: const NutritionInfo(
       calories: 410,
@@ -290,10 +290,10 @@ final List<DrinkModel> mockDrinks = [
 
   DrinkModel(
     id: 'fr_003',
-    name: 'Matcha Cream Frappuccino',
+    name: 'Matcha Cream Cappuccino',
     description: 'Matcha green tea blended with milk and ice, no coffee.',
     basePrice: 425,
-    category: DrinkCategory.frappuccino,
+    category: DrinkCategory.cappuccino,
     imageUrl: '🧋',
     nutrition: const NutritionInfo(
       calories: 310,
@@ -306,7 +306,7 @@ final List<DrinkModel> mockDrinks = [
       method: 'Blended (No Coffee)',
       description:
           'Premium matcha powder is blended with whole milk, vanilla syrup, '
-          'and ice. A coffee-free Frappuccino that delivers earthy green tea '
+          'and ice. A coffee-free Cappuccino that delivers earthy green tea '
           'flavor with a naturally sweet, creamy finish.',
       brewTime: '60 sec blend',
       temperature: 'Iced/Blended',
