@@ -8,25 +8,17 @@
 
 ## 📸 App Screenshots
 
-### 🔐 Authentication Flow
-![Auth Login Screen](docs/screenshots/01-screen.png)
+| Login Screen | Home Screen |
+|---|---|
+| ![Login](assets/login.png) | ![Home](assets/home.png) |
+| **Sign In** — Mobile verification with OTP, Google & Apple auth | **Home** — Personalized greeting, Star balance, Birthday rewards, Happy Hour countdown |
 
-**Sign In Screen** — Mobile number verification with OTP, Google & Apple auth options for seamless onboarding.
+| Store Locator | Profile |
+|---|---|
+| ![Stores](assets/store.png) | ![Profile](assets/profile.png) |
+| **Find Stores** — Google Maps, Distance sorting, Hours & amenities, Directions button | **Profile** — Account details, Star & tier status (Gold Tier), Order history, Preferences |
 
-### 🏠 Home Screen  
-![Home Screen](docs/screenshots/02-screen.png)
-
-**Personalized Experience** — Greeting, Star balance (40 Stars, Gold Tier), Birthday rewards, Happy Hour countdown (15% off, 4–7 PM), Seasonal drinks carousel, Bestseller recommendations.
-
-### ☕ Menu Screen
-**Browse & Search** — Category tabs (Hot Coffee, Cold Coffee, Cappuccino, Tea, Seasonal), Coffee card grid with ratings and local coffee.png images, Instant search across all drinks, Sticky cart indicator.
-
-### 📍 Store Locator  
-**Find Nearby Stores** — Google Maps with store markers and user location, Distance sorting, Hours & amenities (WiFi, Seating, Parking), Directions & Order buttons for each store.
-
-### 👤 Profile Screen
-**User Profile** — Account details (Rajneesh Kumar), Star & tier status (40 Stars, Gold Tier), Loyalty benefits, Order history, Preferences (Birthday, WhatsApp Updates).
-
+---
 
 ## 📱 Features
 
